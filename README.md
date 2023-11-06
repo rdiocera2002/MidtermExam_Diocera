@@ -1,1 +1,1 @@
-# MidternExam_Diocera
+# MidtermExam_Diocera
