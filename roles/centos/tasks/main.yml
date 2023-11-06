@@ -1,0 +1,60 @@
+---
+- name: Install Additional / Update Current packages needed for ElasticSearch, Kibana, and Logstash
+  yum:
+    name:
+    - java-openjdk
+    - epel-release
+    - curl
+    - wget
+    - gnupg2
+    state: latest
+
+- name: Add a RPM Repository Key for ElasticSearch
+  shell: rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: Add a RPM Repository for the Key of ElasticSearch
+  copy:
+    content: |
+      [elasticsearch-7.x]
+      name=Elasticsearch repository for 7.x packages
+      baseurl=https://artifacts.elastic.co/packages/7.x/yum
+      gpgcheck=1
+      gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      enabled=1
+      autorefresh=1
+      type=rpm-md
+    dest: /etc/yum.repos.d/elasticsearch.repo
+  become: yes
+
+- name: Install the ElasticSearch in CentOS
+  yum:
+    name: elasticsearch
+    state: latest
+
+- name: Install the Logstash in CentOS
+  yum:
+    name: logstash
+    state: latest
+
+- name: Install the Kibana in CentOS
+  yum:
+    name: kibana
+    state: latest
+
+- name: Start the ElasticSearch Service in CentOS
+  service:
+    name: elasticsearch
+    state: started
+
+- name: Start the Logstash Service in CentOS
+  service:
+    name: logstash
+    state: started
+    enabled: true
+
+- name: Start the Kibana Service in CentOS
+  service:
+    name: kibana
+    state: started
+    enabled: true
+
